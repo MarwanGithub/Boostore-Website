@@ -151,6 +151,9 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # We use a custom class to prevent errors with missing source map files from 3rd party libs.
 STATICFILES_STORAGE = 'bookstore_project.storages.WhiteNoiseSafeStaticFilesStorage'
 
+# Tell WhiteNoise to ignore missing files when collecting static files.
+WHITENOISE_MANIFEST_STRICT = False
+
 # Cloudinary settings
 # Make sure to set your CLOUDINARY_URL in your .env file
 # It should look like: CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
