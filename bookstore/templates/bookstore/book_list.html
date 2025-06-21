@@ -1,0 +1,35 @@
+{% extends 'bookstore/base.html' %}
+{% load static %}
+
+{% block title %}كل الكتب - {{ store_name }}{% endblock %}
+
+{% block content %}
+<main class="main-content">
+    <section class="all-books-section" id="all-books">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-book"></i> كل الكتب المتاحة</h2>
+            <div class="books-grid">
+                {% for book in books %}
+                <div class="book-card">
+                    <div class="book-image-container">
+                        <img src="{% if book.cover_image %}{{ book.cover_image.url }}{% else %}{% static 'images/cover.jpg' %}{% endif %}" alt="{{ book.title }}" class="book-image">
+                        <div class="book-overlay">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                    <h3 class="book-title">{{ book.title }}</h3>
+                    <p class="book-author"><i class="fas fa-user"></i> {{ book.author }}</p>
+                    <p class="book-description">{{ book.description|truncatewords:20 }}</p>
+                    <div class="book-price">{{ book.price }} ج.م</div>
+                    <button class="buy-button"><i class="fas fa-shopping-cart"></i> أضف للسلة</button>
+                </div>
+                {% empty %}
+                <div class="no-books-message">
+                    <p>لا توجد كتب متاحة في الوقت الحالي. يرجى التحقق مرة أخرى قريبا!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %} 

@@ -1,0 +1,84 @@
+{% extends 'bookstore/base.html' %}
+{% load static %}
+
+{% block title %}{{ store_name }} - الرئيسية{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>{{ hero_title }}</h1>
+            <p>{{ hero_subtitle }}</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <i class="fas fa-book"></i>
+                    <span>كتب متنوعة</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-clock"></i>
+                    <span>{{ opening_hours }}</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-language"></i>
+                    <span>تعلم الألمانية</span>
+                </div>
+            </div>
+            <a href="#featured" class="cta-button"><i class="fas fa-arrow-down"></i> استكشف المجموعة</a>
+        </div>
+    </section>
+
+    <!-- Featured Books Section -->
+    <section class="featured-section" id="featured">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-star"></i> الكتب المميزة</h2>
+            <div class="books-grid">
+                {% for book in featured_books %}
+                <div class="book-card">
+                    <div class="book-image-container">
+                        <img src="{% if book.cover_image %}{{ book.cover_image.url }}{% else %}{% static 'images/cover.jpg' %}{% endif %}" alt="{{ book.title }}" class="book-image">
+                        <div class="book-overlay">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                    <h3 class="book-title">{{ book.title }}</h3>
+                    <p class="book-author"><i class="fas fa-user"></i> {{ book.author }}</p>
+                    <p class="book-description">{{ book.description }}</p>
+                    <div class="book-price">{{ book.price }} ج.م</div>
+                    <button class="buy-button"><i class="fas fa-shopping-cart"></i> أضف للسلة</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="about-content">
+                <h2><i class="fas fa-info-circle"></i> عن {{ store_name }}</h2>
+                <div class="about-text">
+                    <p>{{ store_description }}</p>
+                    <br>
+                    <p>نحن متخصصون في توفير كتب عالية الجودة للطلاب والباحثين ومحبي القراءة. مكتبتنا تضم مجموعة متنوعة من الكتب الأكاديمية والأدبية التي تساعد في تطوير المهارات اللغوية والثقافية.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h4>كتب تعليمية</h4>
+                        <p>مجموعة شاملة لتعلم اللغة الألمانية</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-globe"></i>
+                        <h4>كتب متنوعة</h4>
+                        <p>كتب بالإنجليزية في مجالات مختلفة</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-clock"></i>
+                        <h4>خدمة يومية</h4>
+                        <p>كتاب جديد كل يوم</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %} 

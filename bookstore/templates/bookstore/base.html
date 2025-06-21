@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ store_name }}{% endblock %} - متجر الكتب المتميز</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Tajawal:wght@400;500;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="{% url 'bookstore:home' %}" class="logo"><i class="fas fa-book-open"></i> {{ store_name }}</a>
+            <ul class="nav-menu">
+                <li><a href="{% url 'bookstore:home' %}#home"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="{% url 'bookstore:book_list' %}"><i class="fas fa-book"></i> كل الكتب</a></li>
+                <li><a href="{% url 'bookstore:home' %}#featured"><i class="fas fa-star"></i> الكتب المميزة</a></li>
+                <li><a href="{% url 'bookstore:home' %}#categories"><i class="fas fa-list"></i> الفئات</a></li>
+                <li><a href="{% url 'bookstore:home' %}#about"><i class="fas fa-info-circle"></i> عنا</a></li>
+                <li><a href="{% url 'bookstore:home' %}#contact"><i class="fas fa-envelope"></i> تواصل معنا</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-book-open"></i> {{ store_name }}</h3>
+                    <p>مكتبتك المتخصصة في تعلم اللغة الألمانية والكتب المتنوعة</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>معلومات الاتصال</h4>
+                    <p><i class="fas fa-clock"></i> {{ opening_hours }}</p>
+                    <p><i class="fas fa-envelope"></i> info@germanbooks.com</p>
+                    <p><i class="fas fa-phone"></i> +20 123 456 789</p>
+                </div>
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="{% url 'bookstore:home' %}#featured">الكتب المميزة</a></li>
+                        <li><a href="{% url 'bookstore:home' %}#about">عن المكتبة</a></li>
+                        <li><a href="{% url 'bookstore:home' %}#contact">تواصل معنا</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 {{ store_name }}. جميع الحقوق محفوظة | لمحبي الكتب في كل مكان</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe book cards for animation
+        document.querySelectorAll('.book-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html> 

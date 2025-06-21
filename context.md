@@ -1,0 +1,3 @@
+This project is about a small bookstore that presents books to the users. The books should be added by an admin from an admin panel. Books have categories and will belong to a category. For now only the admin panel will require a log in and we will use the django admin for this.
+
+Categories should be represented by an adjacency list because there are subcategories like philosophy that has sub category of science philosophy.. etc. 
