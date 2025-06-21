@@ -1,5 +1,10 @@
 from django.contrib import admin
 from .models import Book, Category, BookImage
+from django.contrib.auth.models import User, Group
+
+# Unregister the default User and Group models
+admin.site.unregister(User)
+admin.site.unregister(Group)
 
 class BookImageInline(admin.TabularInline):
     model = BookImage
