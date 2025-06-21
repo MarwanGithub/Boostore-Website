@@ -4,32 +4,33 @@
 {% block title %}كل الكتب - {{ store_name }}{% endblock %}
 
 {% block content %}
-<main class="main-content">
-    <section class="all-books-section" id="all-books">
-        <div class="container">
-            <h2 class="section-title"><i class="fas fa-book"></i> كل الكتب المتاحة</h2>
-            <div class="books-grid">
-                {% for book in books %}
-                <div class="book-card">
-                    <div class="book-image-container">
-                        <img src="{% if book.cover_image %}{{ book.cover_image.url }}{% else %}{% static 'images/cover.jpg' %}{% endif %}" alt="{{ book.title }}" class="book-image">
-                        <div class="book-overlay">
-                            <i class="fas fa-eye"></i>
+<section class="all-books-section" id="all-books">
+    <div class="container">
+        <h2 class="section-title mb-4"><i class="fas fa-book"></i> كل الكتب المتاحة</h2>
+        <div class="row" dir="ltr">
+            {% for book in books %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex align-items-stretch" dir="rtl">
+                <div class="card h-100 shadow-sm">
+                    <img src="{% if book.cover_image %}{{ book.cover_image.url }}{% else %}{% static 'images/cover.jpg' %}{% endif %}" class="card-img-top" alt="{{ book.title }}">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> {{ book.author }}</p>
+                        <p class="card-text flex-grow-1 text-justify-custom">{{ book.description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <p class="card-text fs-5 fw-bold">{{ book.price }} ج.م</p>
+                            <a href="#" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> أضف للسلة</a>
                         </div>
                     </div>
-                    <h3 class="book-title">{{ book.title }}</h3>
-                    <p class="book-author"><i class="fas fa-user"></i> {{ book.author }}</p>
-                    <p class="book-description">{{ book.description|truncatewords:20 }}</p>
-                    <div class="book-price">{{ book.price }} ج.م</div>
-                    <button class="buy-button"><i class="fas fa-shopping-cart"></i> أضف للسلة</button>
                 </div>
-                {% empty %}
-                <div class="no-books-message">
-                    <p>لا توجد كتب متاحة في الوقت الحالي. يرجى التحقق مرة أخرى قريبا!</p>
-                </div>
-                {% endfor %}
             </div>
+            {% empty %}
+            <div class="col">
+                <div class="alert alert-info" role="alert">
+                    لا توجد كتب متاحة في الوقت الحالي. يرجى التحقق مرة أخرى قريبا!
+                </div>
+            </div>
+            {% endfor %}
         </div>
-    </section>
-</main>
+    </div>
+</section>
 {% endblock %} 

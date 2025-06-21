@@ -250,6 +250,10 @@ h1, h2, h3, h4, h5, h6 {
     font-style: italic;
 }
 
+.text-justify-custom {
+    text-align: justify;
+}
+
 /* Price badge */
 .book-price {
     font-size: 1.4rem;
@@ -396,13 +400,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .footer-section h3, .footer-section h4 {
+    color: #343a40;
     margin-bottom: 1rem;
-    color: #ecf0f1;
+    font-family: 'Cairo', sans-serif;
 }
 
 .footer-section p, .footer-section li {
-    margin-bottom: 0.5rem;
-    color: #bdc3c7;
+    color: #343a40;
+    font-size: 0.95rem;
 }
 
 .footer-section ul {
@@ -410,7 +415,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .footer-section a {
-    color: #bdc3c7;
+    color: #343a40;
     text-decoration: none;
     transition: color 0.3s;
 }
@@ -481,4 +486,9 @@ h1, h2, h3, h4, h5, h6 {
         flex-direction: row;
         gap: 1rem;
     }
+}
+
+/* Categories section */
+.categories-section {
+    padding: 4rem 0;
 } 
