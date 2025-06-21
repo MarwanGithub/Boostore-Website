@@ -145,6 +145,10 @@ STATICFILES_DIRS = [
 # before deploying. Whitenoise will then serve files from this directory.
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# Use WhiteNoise's storage backend to handle static files during deployment.
+# This is smarter than Django's default and avoids database errors during collectstatic.
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Cloudinary settings
 # Make sure to set your CLOUDINARY_URL in your .env file
 # It should look like: CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
