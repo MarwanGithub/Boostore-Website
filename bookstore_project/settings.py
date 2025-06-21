@@ -148,11 +148,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Use WhiteNoise's storage backend to handle static files during deployment.
 # This is smarter than Django's default and avoids database errors during collectstatic.
-# We use a custom class to prevent errors with missing source map files from 3rd party libs.
-STATICFILES_STORAGE = 'bookstore_project.storages.WhiteNoiseSafeStaticFilesStorage'
-
-# Tell WhiteNoise to ignore missing files when collecting static files.
-WHITENOISE_MANIFEST_STRICT = False
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Cloudinary settings
 # Make sure to set your CLOUDINARY_URL in your .env file
