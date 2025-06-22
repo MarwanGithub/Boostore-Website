@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables from .env file
-load_dotenv(BASE_DIR / 'germnaya.env')
+load_dotenv(BASE_DIR / 'Germaneya.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -40,6 +40,7 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(','
 # Application definition
 
 INSTALLED_APPS = [
+    'bookstore',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,7 +48,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bookstore',
     # Third-party apps for deployment
     'cloudinary',
     'cloudinary_storage',
@@ -143,6 +143,12 @@ STATIC_URL = 'static/'
 
 # This is the folder where 'collectstatic' will place all static files.
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Define the order in which Django finds static files
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 # These are the folders where Django will look for static files in addition
 # to each app's 'static/' directory.
