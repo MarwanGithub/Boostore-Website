@@ -25,5 +25,7 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+    # This serves static files like CSS and JS.
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    # This serves media files like user-uploaded book covers.
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

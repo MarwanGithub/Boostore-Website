@@ -109,3 +109,15 @@ def book_list(request):
         'opening_hours': 'يومياً من ١٠ صباحاً إلى ١٢ مساءً - كتاب جديد كل يوم'
     }
     return render(request, 'bookstore/book_list.html', context)
+
+def book_detail(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    # The 'images' related_name comes from the BookImage model
+    # This gets all BookImage objects related to this book
+    other_images = book.images.all()
+
+    context = {
+        'book': book,
+        'other_images': other_images,
+    }
+    return render(request, 'bookstore/book_detail.html', context)

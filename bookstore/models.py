@@ -35,10 +35,7 @@ class Book(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        # This is a placeholder for now. If you create a book detail page,
-        # you can change this to point to that page's URL.
-        # For example: return reverse('bookstore:book_detail', args=[self.id])
-        return "#"
+        return reverse('bookstore:book_detail', args=[self.id])
 
 
 class BookImage(models.Model):
