@@ -142,46 +142,34 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 # This is the folder where 'collectstatic' will place all static files.
-STATIC_URL = '/static/'
-
-# This is the folder where 'collectstatic' will place all static files.
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# These are the folders where Django will look for your personal static files.
+# These are the folders where Django will look for static files in addition
+# to each app's 'static/' directory.
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-
-# Cloudinary settings are checked first, as they affect the STORAGES dict below.
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 
-# === CHANGE START ===
-# We are creating the unified STORAGES dictionary here.
-# This single dictionary will control both static and media files.
-
+# Production settings: This block will be active ONLY when deployed on Render
 STORAGES = {
-    # This key, "default", replaces the old `DEFAULT_FILE_STORAGE` setting.
-    # It controls where user-uploaded media files are stored.
+    # Media file storage (user uploads like book covers)
     "default": {
-        "BACKEND": (
-            "cloudinary_storage.storage.MediaCloudinaryStorage"  # Use Cloudinary if its URL is set
-            if CLOUDINARY_URL
-            else "django.core.files.storage.FileSystemStorage"  # Otherwise, use the local filesystem
-        )
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"
     },
-    # This key, "staticfiles", is for your app's static files (CSS, JS).
+    # Static file storage (your app's CSS, JS, admin files)
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+        "BACKEND": "cloudinary_storage.storage.StaticHashedCloudinaryStorage"
     },
 }
-
-# === CHANGE END ===
-
-
-# Production settings: This block adjusts settings only when on Render.
 if not DEBUG:
     # Overwrite the default STATIC_URL with the one from your Render Static Site.
     STATIC_URL = os.environ.get('STATIC_URL')
+# Cloudinary settings
+# Make sure to set your CLOUDINARY_URL in your .env file
+# It should look like: CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
+
+# Set the default file storage to Cloudinary
 
 # Media files (User uploaded content)
 # These are now served from Cloudinary, so local MEDIA_URL and MEDIA_ROOT are less important
