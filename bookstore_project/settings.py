@@ -57,7 +57,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     # Whitenoise middleware should be placed right after the security middleware
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    #'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -138,30 +138,50 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+# This is the URL that your HTML will use to refer to static files
 STATIC_URL = 'static/'
+
+# This is the folder where 'collectstatic' will place all static files.
+STATIC_URL = '/static/'
+
+# This is the folder where 'collectstatic' will place all static files.
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# These are the folders where Django will look for your personal static files.
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-# This is the directory where Django will collect all static files
-# before deploying. Whitenoise will then serve files from this directory.
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Use WhiteNoise's storage backend to handle static files during deployment.
+# Cloudinary settings are checked first, as they affect the STORAGES dict below.
+CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
+
+# === CHANGE START ===
+# We are creating the unified STORAGES dictionary here.
+# This single dictionary will control both static and media files.
+
 STORAGES = {
-    # The recommended storage backend for production, with forever-caching.
+    # This key, "default", replaces the old `DEFAULT_FILE_STORAGE` setting.
+    # It controls where user-uploaded media files are stored.
+    "default": {
+        "BACKEND": (
+            "cloudinary_storage.storage.MediaCloudinaryStorage"  # Use Cloudinary if its URL is set
+            if CLOUDINARY_URL
+            else "django.core.files.storage.FileSystemStorage"  # Otherwise, use the local filesystem
+        )
+    },
+    # This key, "staticfiles", is for your app's static files (CSS, JS).
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
     },
 }
 
-# Cloudinary settings
-# Make sure to set your CLOUDINARY_URL in your .env file
-# It should look like: CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
-CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
+# === CHANGE END ===
 
-# Set the default file storage to Cloudinary
-if CLOUDINARY_URL:
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Production settings: This block adjusts settings only when on Render.
+if not DEBUG:
+    # Overwrite the default STATIC_URL with the one from your Render Static Site.
+    STATIC_URL = os.environ.get('STATIC_URL')
 
 # Media files (User uploaded content)
 # These are now served from Cloudinary, so local MEDIA_URL and MEDIA_ROOT are less important
