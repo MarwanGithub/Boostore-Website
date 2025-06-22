@@ -1,10 +1,18 @@
 from django.contrib import admin
 from .models import Book, Category, BookImage
 from django.contrib.auth.models import User, Group
+from django.contrib.admin.sites import NotRegistered
 
-# Unregister the default User and Group models
-admin.site.unregister(User)
-admin.site.unregister(Group)
+# Unregister the default User and Group models to replace them later if needed
+try:
+    admin.site.unregister(User)
+except NotRegistered:
+    pass
+
+try:
+    admin.site.unregister(Group)
+except NotRegistered:
+    pass
 
 class BookImageInline(admin.TabularInline):
     model = BookImage
