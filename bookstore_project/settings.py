@@ -29,12 +29,21 @@ load_dotenv(BASE_DIR / 'Germaneya.env')
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-m7!0!z4926bqo##gdx-k*g6i%4ebl6y(l4+w6&!3^$=uqo^+&-')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# The os.environ.get('DEBUG', 'False') == 'True' part will default to False
-# if the DEBUG variable is not set in the .env file.
-# On Render, you can set DEBUG to False in your environment variables.
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+# Render provides a RENDER environment variable.
+IS_RENDER = 'RENDER' in os.environ
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+if IS_RENDER:
+    DEBUG = False
+else:
+    DEBUG = True # Keep DEBUG=True for local development
+
+if IS_RENDER:
+    # Get the Render external hostname, and also add the internal one
+    RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+    ALLOWED_HOSTS = [RENDER_EXTERNAL_HOSTNAME]
+else:
+    # Allow all hosts for local development
+    ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -157,8 +166,8 @@ STATICFILES_DIRS = [
 ]
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 
-# Production settings: This block will be active ONLY when deployed on Render (i.e., when DEBUG=False)
-if not DEBUG:
+# Production settings: This block will be active ONLY when deployed on Render
+if IS_RENDER:
     STORAGES = {
         # Media file storage (user uploads like book covers)
         "default": {

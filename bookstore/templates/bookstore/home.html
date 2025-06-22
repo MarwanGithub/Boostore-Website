@@ -51,10 +51,14 @@
                     <p class="book-author"><i class="fas fa-user"></i> {{ book.author }}</p>
                     <p class="book-description">{{ book.description }}</p>
                     <div class="book-price">{{ book.price }} ج.م</div>
-                    <form action="{% url 'bookstore:add_to_cart' book.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="buy-button"><i class="fas fa-shopping-cart"></i> أضف للسلة</button>
-                    </form>
+                    {% if book.id|stringformat:"s" in cart.cart %}
+                         <button type="button" class="buy-button" disabled><i class="fas fa-check"></i> في السلة</button>
+                    {% else %}
+                        <form action="{% url 'bookstore:add_to_cart' book.id %}" method="post" class="add-to-cart-form">
+                            {% csrf_token %}
+                            <button type="submit" class="buy-button"><i class="fas fa-shopping-cart"></i> <span>أضف للسلة</span></button>
+                        </form>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
