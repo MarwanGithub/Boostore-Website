@@ -71,9 +71,6 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Hero section */
 .hero {
-    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('../images/cover.jpg');
-    background-size: cover;
-    background-position: center;
     height: 70vh;
     display: flex;
     align-items: center;
