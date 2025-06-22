@@ -166,7 +166,7 @@ if not DEBUG:
         },
         # Static file storage (your app's CSS, JS, admin files)
         "staticfiles": {
-            "BACKEND": "cloudinary_storage.storage.StaticHashedCloudinaryStorage"
+            "BACKEND": "cloudinary_storage.storage.ManifestStaticFilesStorage"
         },
     }
 
