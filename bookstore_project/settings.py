@@ -166,11 +166,16 @@ if not DEBUG:
         },
         # Static file storage (your app's CSS, JS, admin files)
         "staticfiles": {
-            "BACKEND": "cloudinary_storage.storage.ManifestStaticFilesStorage"
+            "BACKEND": "cloudinary_storage.storage.StaticHashedCloudinaryStorage"
         },
     }
 
 # Cloudinary settings
+CLOUDINARY_STORAGE = {
+    'EXCLUDE_DIRS': [
+        'jazzmin',
+    ],
+}
 # Make sure to set your CLOUDINARY_URL in your .env file
 # It should look like: CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
 
