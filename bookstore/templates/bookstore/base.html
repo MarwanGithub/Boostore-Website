@@ -16,15 +16,35 @@
     <!-- Header -->
     <header class="header">
         <nav class="nav-container">
-            <a href="{% url 'bookstore:home' %}" class="logo"><i class="fas fa-book-open"></i> {{ store_name }}</a>
-            <ul class="nav-menu">
-                <li><a href="{% url 'bookstore:home' %}#home"><i class="fas fa-home"></i> الرئيسية</a></li>
-                <li><a href="{% url 'bookstore:book_list' %}"><i class="fas fa-book"></i> كل الكتب</a></li>
-                <li><a href="{% url 'bookstore:home' %}#featured"><i class="fas fa-star"></i> الكتب المميزة</a></li>
-                <li><a href="{% url 'bookstore:home' %}#categories"><i class="fas fa-list"></i> الفئات</a></li>
-                <li><a href="{% url 'bookstore:home' %}#about"><i class="fas fa-info-circle"></i> عنا</a></li>
-                <li><a href="{% url 'bookstore:home' %}#contact"><i class="fas fa-envelope"></i> تواصل معنا</a></li>
-            </ul>
+            <!-- Left side of the navbar -->
+            <div class="d-flex align-items-center">
+                <a href="{% url 'bookstore:home' %}" class="logo"><i class="fas fa-book-open"></i> {{ store_name }}</a>
+                <ul class="nav-menu ms-4">
+                    <li><a href="{% url 'bookstore:home' %}#home"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="{% url 'bookstore:book_list' %}"><i class="fas fa-book"></i> كل الكتب</a></li>
+                    <li><a href="{% url 'bookstore:home' %}#featured"><i class="fas fa-star"></i> الكتب المميزة</a></li>
+                    <li><a href="{% url 'bookstore:home' %}#categories"><i class="fas fa-list"></i> الفئات</a></li>
+                    <li><a href="{% url 'bookstore:home' %}#about"><i class="fas fa-info-circle"></i> عنا</a></li>
+                    <li><a href="{% url 'bookstore:home' %}#contact"><i class="fas fa-envelope"></i> تواصل معنا</a></li>
+                </ul>
+            </div>
+
+            <!-- Right side of the navbar (Cart) -->
+            <div class="cart-summary">
+                <a href="{% url 'bookstore:cart_detail' %}" class="btn btn-outline-light" dir="ltr">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="header-cart-content">
+                        {% with total_items=cart|length %}
+                            {% if total_items > 0 %}
+                                {{ total_items }} item{{ total_items|pluralize }},
+                                <span class="fw-bold">EGP {{ cart.get_total_price }}</span>
+                            {% else %}
+                                Cart is empty
+                            {% endif %}
+                        {% endwith %}
+                    </span>
+                </a>
+            </div>
         </nav>
     </header>
 
@@ -106,5 +126,6 @@
             observer.observe(card);
         });
     </script>
+    {% block javascript %}{% endblock %}
 </body>
 </html> 

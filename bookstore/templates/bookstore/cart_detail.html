@@ -1,0 +1,169 @@
+{% extends "bookstore/base.html" %}
+
+{% block title %}
+Your Shopping Cart
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h1 dir="ltr">Your Shopping Cart</h1>
+    <table class="table table-striped" dir="ltr">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Book</th>
+                <th>Quantity</th>
+                <th>Remove</th>
+                <th>Unit Price</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+            {% with book=item.book %}
+            <tr data-book-row="{{ book.id }}">
+                <td>
+                    <a href="{{ book.get_absolute_url }}">
+                        <img src="{% if book.cover_image %}{{ book.cover_image.url }}{% else %}https://via.placeholder.com/80x120{% endif %}" alt="{{ book.title }}"
+                            style="height: 80px;">
+                    </a>
+                </td>
+                <td>{{ book.title }}</td>
+                <td>
+                    <div class="input-group" style="width: 120px;" data-book-id="{{ book.id }}">
+                        <button class="btn btn-outline-secondary quantity-btn" type="button" data-action="decrease">-</button>
+                        <input type="text" class="form-control text-center quantity-input" value="{{ item.quantity }}" readonly>
+                        <button class="btn btn-outline-secondary quantity-btn" type="button" data-action="increase">+</button>
+                    </div>
+                </td>
+                <td><a href="#" class="text-danger remove-btn" data-book-id="{{ book.id }}">Remove</a></td>
+                <td class="num item-total-price" data-price-id="{{ book.id }}">EGP {{ item.total_price|floatformat:2 }}</td>
+            </tr>
+            {% endwith %}
+            {% endfor %}
+            <tr class="table-info">
+                <td colspan="5" class="text-end fw-bold">Total</td>
+                <td colspan="1" class="num fw-bold" id="cart-total-price">EGP {{ cart.get_total_price|floatformat:2 }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="text-end" dir="ltr">
+        <a href="{% url 'bookstore:book_list' %}" class="btn btn-secondary">Continue shopping</a>
+        <a href="{% url 'bookstore:contact_to_order' %}" class="btn btn-primary">Proceed to Order</a>
+    </p>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Function to get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    // Function to update the header cart
+    const updateHeaderCart = (totalItems, cartTotalPrice) => {
+        const headerCartContent = document.getElementById('header-cart-content');
+        if (totalItems > 0) {
+            const plural = totalItems > 1 ? 's' : '';
+            headerCartContent.innerHTML = `${totalItems} item${plural}, <span class="fw-bold">EGP ${cartTotalPrice.toFixed(2)}</span>`;
+        } else {
+            headerCartContent.textContent = 'Cart is empty';
+        }
+    };
+    
+    // Function to handle quantity updates
+    const updateCart = (bookId, quantity) => {
+        const formData = new FormData();
+        formData.append('quantity', quantity);
+        formData.append('override', 'True');
+
+        fetch(`/cart/add/${bookId}/`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': csrftoken
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                const input = document.querySelector(`.input-group[data-book-id="${bookId}"] .quantity-input`);
+                if (input) input.value = data.quantity;
+
+                const itemTotalPriceEl = document.querySelector(`.item-total-price[data-price-id="${bookId}"]`);
+                if (itemTotalPriceEl) itemTotalPriceEl.textContent = `EGP ${data.item_total_price.toFixed(2)}`;
+                
+                const cartTotalPriceEl = document.getElementById('cart-total-price');
+                if (cartTotalPriceEl) cartTotalPriceEl.textContent = `EGP ${data.cart_total_price.toFixed(2)}`;
+
+                updateHeaderCart(data.total_items, data.cart_total_price);
+            }
+        });
+    };
+
+    // Function to handle item removal
+    const removeItem = (bookId) => {
+        fetch(`/cart/remove/${bookId}/`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.removed) {
+                const row = document.querySelector(`tr[data-book-row="${bookId}"]`);
+                if (row) row.remove();
+
+                const cartTotalPriceEl = document.getElementById('cart-total-price');
+                if (cartTotalPriceEl) cartTotalPriceEl.textContent = `EGP ${data.cart_total_price.toFixed(2)}`;
+
+                updateHeaderCart(data.total_items, data.cart_total_price);
+            }
+        });
+    };
+
+    // Attach event listeners for +/- buttons
+    document.querySelectorAll('.quantity-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const group = button.closest('.input-group');
+            const bookId = group.dataset.bookId;
+            const input = group.querySelector('.quantity-input');
+            let currentQuantity = parseInt(input.value);
+            
+            if (button.dataset.action === 'increase') {
+                updateCart(bookId, currentQuantity + 1);
+            } else if (button.dataset.action === 'decrease' && currentQuantity > 1) {
+                updateCart(bookId, currentQuantity - 1);
+            } else if (button.dataset.action === 'decrease' && currentQuantity === 1) {
+                removeItem(bookId);
+            }
+        });
+    });
+
+    // Attach event listeners for remove buttons
+    document.querySelectorAll('.remove-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const bookId = button.dataset.bookId;
+            removeItem(bookId);
+        });
+    });
+});
+</script>
+{% endblock %} 

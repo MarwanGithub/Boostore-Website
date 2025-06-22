@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables from .env file
-load_dotenv(BASE_DIR / '.env')
+load_dotenv(BASE_DIR / 'germnaya.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     # Third-party apps for deployment
     'cloudinary',
     'cloudinary_storage',
-    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +78,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'bookstore.context_processors.cart',
             ],
         },
     },
@@ -151,20 +151,19 @@ STATICFILES_DIRS = [
 ]
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 
-# Production settings: This block will be active ONLY when deployed on Render
-STORAGES = {
-    # Media file storage (user uploads like book covers)
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"
-    },
-    # Static file storage (your app's CSS, JS, admin files)
-    "staticfiles": {
-        "BACKEND": "cloudinary_storage.storage.StaticHashedCloudinaryStorage"
-    },
-}
+# Production settings: This block will be active ONLY when deployed on Render (i.e., when DEBUG=False)
 if not DEBUG:
-    # Overwrite the default STATIC_URL with the one from your Render Static Site.
-    STATIC_URL = os.environ.get('STATIC_URL')
+    STORAGES = {
+        # Media file storage (user uploads like book covers)
+        "default": {
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"
+        },
+        # Static file storage (your app's CSS, JS, admin files)
+        "staticfiles": {
+            "BACKEND": "cloudinary_storage.storage.StaticHashedCloudinaryStorage"
+        },
+    }
+
 # Cloudinary settings
 # Make sure to set your CLOUDINARY_URL in your .env file
 # It should look like: CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
@@ -258,3 +257,6 @@ JAZZMIN_UI_TWEAKS = {
         "success": "btn-success"
     }
 }
+
+# Cart Session ID
+CART_SESSION_ID = 'cart'
