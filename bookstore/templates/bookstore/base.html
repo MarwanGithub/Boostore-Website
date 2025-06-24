@@ -19,7 +19,12 @@
             <!-- Left side of the navbar -->
             <div class="d-flex align-items-center">
                 <a href="{% url 'bookstore:home' %}" class="logo"><i class="fas fa-book-open"></i> {{ store_name }}</a>
-                <ul class="nav-menu ms-4">
+                <!-- MOBILE HAMBURGER BUTTON -->
+                <button id="nav-toggle" class="nav-toggle btn btn-outline-light d-md-none ms-2" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <!-- MAIN NAVIGATION MENU -->
+                <ul id="main-nav" class="nav-menu ms-4">
                     <li><a href="{% url 'bookstore:home' %}#home"><i class="fas fa-home"></i> الرئيسية</a></li>
                     <li><a href="{% url 'bookstore:book_list' %}"><i class="fas fa-book"></i> كل الكتب</a></li>
                     <li><a href="{% url 'bookstore:home' %}#featured"><i class="fas fa-star"></i> الكتب المميزة</a></li>
@@ -30,19 +35,12 @@
             </div>
 
             <!-- Right side of the navbar (Cart) -->
-            <div class="cart-summary">
-                <a href="{% url 'bookstore:cart_detail' %}" class="btn btn-outline-light" dir="ltr">
+            <div class="cart-summary position-relative">
+                <a href="{% url 'bookstore:cart_detail' %}" class="btn btn-outline-light position-relative cart-link" dir="ltr">
                     <i class="fas fa-shopping-cart"></i>
-                    <span id="header-cart-content">
-                        {% with total_items=cart|length %}
-                            {% if total_items > 0 %}
-                                {{ total_items }} item{{ total_items|pluralize }},
-                                <span class="fw-bold">EGP {{ cart.get_total_price }}</span>
-                            {% else %}
-                                Cart is empty
-                            {% endif %}
-                        {% endwith %}
-                    </span>
+                    <span id="header-cart-count" class="cart-count badge bg-danger position-absolute top-0 start-0 translate-middle">{{ cart|length }}</span>
+                    <span id="header-cart-total" class="cart-total d-none d-md-inline">
+                   </span>
                 </a>
             </div>
         </nav>
@@ -146,11 +144,17 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'ok') {
-                        // Update header cart
-                        const headerCartContent = document.getElementById('header-cart-content');
-                        if (headerCartContent) {
+                        // Update count badge
+                        const headerCartCount = document.getElementById('header-cart-count');
+                        if (headerCartCount) {
+                            headerCartCount.textContent = data.total_items;
+                        }
+
+                        // Update desktop total text
+                        const headerCartTotal = document.getElementById('header-cart-total');
+                        if (headerCartTotal) {
                             const plural = data.total_items > 1 ? 's' : '';
-                            headerCartContent.innerHTML = `${data.total_items} item${plural}, <span class="fw-bold">EGP ${data.cart_total_price.toFixed(2)}</span>`;
+                            headerCartTotal.innerHTML = `${data.total_items} item${plural}, <span class='fw-bold'>EGP ${data.cart_total_price.toFixed(2)}</span>`;
                         }
 
                         // Provide visual feedback on the button
@@ -164,6 +168,14 @@
                 });
             }
         });
+
+        // Mobile nav toggle
+        const navToggleBtn = document.getElementById('nav-toggle');
+        if (navToggleBtn) {
+            navToggleBtn.addEventListener('click', () => {
+                document.getElementById('main-nav').classList.toggle('open');
+            });
+        }
     </script>
     {% block javascript %}{% endblock %}
 </body>

@@ -6,45 +6,47 @@ Your Shopping Cart
 {% block content %}
 <div class="container mt-5">
     <h1 dir="ltr">Your Shopping Cart</h1>
-    <table class="table table-striped" dir="ltr">
-        <thead>
-            <tr>
-                <th>Book</th>
-                <th style="width: 150px;">Quantity</th>
-                <th>Remove</th>
-                <th>Unit Price</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in cart %}
-            {% with book=item.book %}
-            <tr data-book-row="{{ book.id }}">
-                <td>{{ book.title }}</td>
-                <td>
-                    <div class="input-group quantity-control" data-book-id="{{ book.id }}">
-                        <button class="btn btn-outline-secondary quantity-btn" type="button" data-action="decrease">-</button>
-                        <input type="text" class="form-control text-center quantity-input" value="{{ item.quantity }}" readonly>
-                        <button class="btn btn-outline-secondary quantity-btn" type="button" data-action="increase">+</button>
-                    </div>
-                </td>
-                <td>
-                    <button class="btn btn-link text-danger remove-btn" data-book-id="{{ book.id }}">
-                        <span class="button-text">Remove</span>
-                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                    </button>
-                </td>
-                <td class="num item-unit-price" data-unit-price="{{ item.price|floatformat:2 }}">EGP {{ item.price|floatformat:2 }}</td>
-                <td class="num item-total-price" data-price-id="{{ book.id }}">EGP {{ item.total_price|floatformat:2 }}</td>
-            </tr>
-            {% endwith %}
-            {% endfor %}
-            <tr class="table-info">
-                <td colspan="4" class="text-end fw-bold">Total</td>
-                <td colspan="1" class="num fw-bold" id="cart-total-price">EGP {{ cart.get_total_price|floatformat:2 }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-striped" dir="ltr">
+            <thead>
+                <tr>
+                    <th>Book</th>
+                    <th style="width: 150px;">Quantity</th>
+                    <th>Remove</th>
+                    <th>Unit Price</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                {% with book=item.book %}
+                <tr data-book-row="{{ book.id }}">
+                    <td>{{ book.title }}</td>
+                    <td>
+                        <div class="input-group quantity-control" data-book-id="{{ book.id }}">
+                            <button class="btn btn-outline-secondary quantity-btn" type="button" data-action="decrease">-</button>
+                            <input type="text" class="form-control text-center quantity-input" value="{{ item.quantity }}" readonly>
+                            <button class="btn btn-outline-secondary quantity-btn" type="button" data-action="increase">+</button>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-link text-danger remove-btn" data-book-id="{{ book.id }}">
+                            <span class="button-text">Remove</span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        </button>
+                    </td>
+                    <td class="num item-unit-price" data-unit-price="{{ item.price|floatformat:2 }}">EGP {{ item.price|floatformat:2 }}</td>
+                    <td class="num item-total-price" data-price-id="{{ book.id }}">EGP {{ item.total_price|floatformat:2 }}</td>
+                </tr>
+                {% endwith %}
+                {% endfor %}
+                <tr class="table-info">
+                    <td colspan="4" class="text-end fw-bold">Total</td>
+                    <td colspan="1" class="num fw-bold" id="cart-total-price">EGP {{ cart.get_total_price|floatformat:2 }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <p class="text-end" dir="ltr">
         <a href="{% url 'bookstore:book_list' %}" class="btn btn-secondary">Continue shopping</a>
         <a href="{% url 'bookstore:contact_to_order' %}" class="btn btn-primary">Proceed to Order</a>
@@ -72,12 +74,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const csrftoken = getCookie('csrftoken');
 
     const updateHeaderCart = (totalItems, cartTotalPrice) => {
-        const headerCartContent = document.getElementById('header-cart-content');
-        if (totalItems > 0) {
-            const plural = totalItems > 1 ? 's' : '';
-            headerCartContent.innerHTML = `${totalItems} item${plural}, <span class="fw-bold">EGP ${cartTotalPrice.toFixed(2)}</span>`;
-        } else {
-            headerCartContent.textContent = 'Cart is empty';
+        const headerCartCount = document.getElementById('header-cart-count');
+        const headerCartTotal = document.getElementById('header-cart-total');
+
+        if (headerCartCount) {
+            headerCartCount.textContent = totalItems;
+        }
+
+        if (headerCartTotal) {
+            if (totalItems > 0) {
+                const plural = totalItems > 1 ? 's' : '';
+                headerCartTotal.innerHTML = `${totalItems} item${plural}, <span class='fw-bold'>EGP ${cartTotalPrice.toFixed(2)}</span>`;
+            } else {
+                headerCartTotal.textContent = 'Cart is empty';
+            }
         }
     };
 
