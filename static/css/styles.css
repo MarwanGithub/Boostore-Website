@@ -545,6 +545,16 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
+@media (min-width: 769px) {
+    /* keep nav-menu in place */
+    .nav-menu { margin-right: 0; }
+
+    /* visually move logo further to the right without affecting nav menu */
+    .logo {
+        transform: translateX(10rem); /* adjust value as needed */
+    }
+}
+
 /* Categories section */
 .categories-section {
     padding: 4rem 0;
