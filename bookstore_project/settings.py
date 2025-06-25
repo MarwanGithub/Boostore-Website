@@ -175,7 +175,7 @@ if IS_RENDER:
         },
         # Static file storage (your app's CSS, JS, admin files)
         "staticfiles": {
-            "BACKEND": "cloudinary_storage.storage.StaticHashedCloudinaryStorage"
+            "BACKEND": "bookstore.storages.CustomStaticHashedCloudinaryStorage"
         },
     }
 else:
@@ -185,7 +185,7 @@ else:
             "BACKEND": "django.core.files.storage.FileSystemStorage"
         },
         "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+            "BACKEND": "bookstore.storages.CustomManifestStaticFilesStorage"
         },
     }
 
