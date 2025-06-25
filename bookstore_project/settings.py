@@ -175,7 +175,17 @@ if IS_RENDER:
         },
         # Static file storage (your app's CSS, JS, admin files)
         "staticfiles": {
-            "BACKEND": "cloudinary_storage.storage.StaticCloudinaryStorage"
+            "BACKEND": "cloudinary_storage.storage.StaticHashedCloudinaryStorage"
+        },
+    }
+else:
+    # Use manifest storage for local development to mimic production caching behavior
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage"
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
         },
     }
 
