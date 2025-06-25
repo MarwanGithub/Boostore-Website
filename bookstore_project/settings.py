@@ -179,13 +179,13 @@ if IS_RENDER:
         },
     }
 else:
-    # Use manifest storage for local development to mimic production caching behavior
+    # Use Cloudinary for local development as well to mimic production.
     STORAGES = {
         "default": {
-            "BACKEND": "django.core.files.storage.FileSystemStorage"
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"
         },
         "staticfiles": {
-            "BACKEND": "bookstore.storages.CustomManifestStaticFilesStorage"
+            "BACKEND": "bookstore.storages.CustomStaticHashedCloudinaryStorage"
         },
     }
 

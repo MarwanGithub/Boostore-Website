@@ -6,9 +6,9 @@ class CustomStaticHashedCloudinaryStorage(StaticHashedCloudinaryStorage):
     A custom storage class for Cloudinary that ignores missing source map files
     and other file-not-found errors during the collectstatic process.
     """
-    def url_converter(self, name, MAPPING_URL_REGEXP):
+    def url_converter(self, name):
         # Get the default converter from the parent class.
-        base_converter = super().url_converter(name, MAPPING_URL_REGEXP)
+        base_converter = super().url_converter(name)
 
         def converter(matchobj):
             try:
@@ -27,9 +27,9 @@ class CustomManifestStaticFilesStorage(ManifestStaticFilesStorage):
     A custom storage class for local development that ignores missing source map files
     and other file-not-found errors during the collectstatic process.
     """
-    def url_converter(self, name, MAPPING_URL_REGEXP):
+    def url_converter(self, name):
         # Get the default converter from the parent class.
-        base_converter = super().url_converter(name, MAPPING_URL_REGEXP)
+        base_converter = super().url_converter(name)
 
         def converter(matchobj):
             try:
