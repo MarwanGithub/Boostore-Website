@@ -191,9 +191,7 @@ else:
 
 # Cloudinary settings
 CLOUDINARY_STORAGE = {
-    'EXCLUDE_DIRS': [
-        'jazzmin',
-    ],
+    'EXCLUDE_DIRS': [],
 }
 # Make sure to set your CLOUDINARY_URL in your .env file
 # It should look like: CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
