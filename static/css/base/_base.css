@@ -1,0 +1,26 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cairo', 'Tajawal', 'Amiri', Arial, sans-serif;
+    line-height: 1.8;
+    color: #333;
+    background-color: #f8f9fa;
+    direction: rtl;
+    text-align: right;
+    overflow-x: hidden;
+}
+
+/* Arabic font support */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cairo', 'Tajawal', serif;
+    font-weight: 700;
+}
+
+.book-title, .section-title {
+    font-family: 'Amiri', 'Cairo', serif;
+}
