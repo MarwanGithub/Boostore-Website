@@ -293,8 +293,9 @@ JAZZMIN_UI_TWEAKS = {
 CART_SESSION_ID = 'cart'
 
 # Django Compressor settings
-COMPRESS_ENABLED = True
-# Keep compression online to avoid template-library errors during the build-time pass.
+# Disable compressor entirely in production to avoid UncompressableFileError with remote Cloudinary URLs.
+# The {% compress %} tags will simply output their contents unchanged.
+COMPRESS_ENABLED = False
 COMPRESS_OFFLINE = False
 
 # When using offline compression with a remote storage backend like Cloudinary,
