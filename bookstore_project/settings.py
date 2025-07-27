@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import cloudinary
 import os
 import dj_database_url
 from dotenv import load_dotenv
@@ -293,7 +294,17 @@ CART_SESSION_ID = 'cart'
 
 # Django Compressor settings
 COMPRESS_ENABLED = True
+# With the `compress` command in the build step, offline compression should be enabled.
 COMPRESS_OFFLINE = True
+
+# When using offline compression with a remote storage backend like Cloudinary,
+# COMPRESS_URL must be set to the base URL of the remote storage.
+# This allows django-compressor to correctly locate the already-uploaded
+# static files referenced by the {% static %} tag.
+config = cloudinary.config(secure=True)
+if config and config.cloud_name:
+    COMPRESS_URL = f"https://res.cloudinary.com/{config.cloud_name}/"
+
 COMPRESS_STORAGE = STORAGES["staticfiles"]["BACKEND"]
 COMPRESS_CSS_FILTERS = [
     'compressor.filters.css_default.CssAbsoluteFilter',
