@@ -294,16 +294,16 @@ CART_SESSION_ID = 'cart'
 
 # Django Compressor settings
 COMPRESS_ENABLED = True
-# With the `compress` command in the build step, offline compression should be enabled.
-COMPRESS_OFFLINE = True
+# Keep compression online to avoid template-library errors during the build-time pass.
+COMPRESS_OFFLINE = False
 
 # When using offline compression with a remote storage backend like Cloudinary,
 # COMPRESS_URL must be set to the base URL of the remote storage.
 # This allows django-compressor to correctly locate the already-uploaded
 # static files referenced by the {% static %} tag.
-config = cloudinary.config(secure=True)
-if config and config.cloud_name:
-    COMPRESS_URL = f"https://res.cloudinary.com/{config.cloud_name}/"
+# config = cloudinary.config(secure=True)
+# if config and config.cloud_name:
+#     COMPRESS_URL = f"https://res.cloudinary.com/{config.cloud_name}/"
 
 COMPRESS_STORAGE = STORAGES["staticfiles"]["BACKEND"]
 COMPRESS_CSS_FILTERS = [
