@@ -294,6 +294,7 @@ CART_SESSION_ID = 'cart'
 # Django Compressor settings
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
+COMPRESS_STORAGE = STORAGES["staticfiles"]["BACKEND"]
 COMPRESS_CSS_FILTERS = [
     'compressor.filters.css_default.CssAbsoluteFilter',
     'compressor.filters.cssmin.CSSMinFilter',
