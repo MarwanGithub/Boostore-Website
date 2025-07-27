@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     # Third-party apps for deployment
     'cloudinary',
     'cloudinary_storage',
+    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -157,6 +158,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
 ]
 
 # These are the folders where Django will look for static files in addition
@@ -288,3 +290,10 @@ JAZZMIN_UI_TWEAKS = {
 
 # Cart Session ID
 CART_SESSION_ID = 'cart'
+
+# Django Compressor settings
+COMPRESS_ENABLED = True
+COMPRESS_CSS_FILTERS = [
+    'compressor.filters.css_default.CssAbsoluteFilter',
+    'compressor.filters.cssmin.CSSMinFilter',
+]

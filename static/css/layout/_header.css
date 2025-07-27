@@ -42,3 +42,57 @@
 .nav-menu a:hover {
     opacity: 0.8;
 }
+
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Adds some space between the icons */
+}
+
+/* --- Mobile First Styles --- */
+
+/* Hide main navigation and show toggle by default for mobile */
+.nav-menu { display: none; }
+.nav-toggle { display: block; }
+
+/* Styles for the expanded mobile menu */
+.nav-menu.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #16213e;
+    padding: 1rem;
+    gap: 0.5rem;
+}
+.nav-menu.open li { width: 100%; }
+.nav-menu.open a { display: block; padding: 0.5rem 1rem; }
+
+/* Reverse the icons on mobile */
+.header-icons {
+    flex-direction: row-reverse;
+}
+
+
+/* --- Desktop Styles --- */
+
+@media (min-width: 769px) {
+    /* Show main navigation and hide toggle on desktop */
+    .nav-menu { display: flex; }
+    .nav-toggle { display: none; }
+
+    /* Restore icon order on desktop */
+    .header-icons {
+        flex-direction: row;
+    }
+
+    /* Remove mobile-only styles for the menu */
+    .nav-menu.open {
+        position: static;
+        flex-direction: row;
+        background: transparent;
+        padding: 0;
+    }
+}

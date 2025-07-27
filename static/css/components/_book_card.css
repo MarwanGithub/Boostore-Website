@@ -91,3 +91,29 @@
 .book-image-container:hover .book-overlay {
     opacity: 1;
 }
+
+/* Responsive Cart Styles */
+@media (max-width: 768px) {
+    /* Cart adjustments */
+    .cart-count {
+        font-size: 0.75rem;
+        padding: 0.25em 0.45em;
+    }
+
+    /* Cart table adjustments */
+    .quantity-control {
+        width: 100% !important;
+    }
+
+    .quantity-control .form-control {
+        width: 45px;
+    }
+
+    .table thead {
+        font-size: 0.9rem;
+    }
+
+    .table td, .table th {
+        white-space: nowrap;
+    }
+}

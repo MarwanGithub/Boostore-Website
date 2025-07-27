@@ -49,7 +49,7 @@
                     </a>
                     <h3 class="book-title"><a href="{{ book.get_absolute_url }}" class="text-decoration-none text-dark">{{ book.title }}</a></h3>
                     <p class="book-author"><i class="fas fa-user"></i> {{ book.author }}</p>
-                    <p class="book-description">{{ book.description }}</p>
+                    <p class="book-description">{{ book.description|truncatewords:20 }}</p>
                     <div class="book-price">{{ book.price }} ج.م</div>
                     {% if book.id|stringformat:"s" in cart.cart %}
                          <button type="button" class="buy-button" disabled><i class="fas fa-check"></i> في السلة</button>
