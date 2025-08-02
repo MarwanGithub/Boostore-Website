@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
-from .models import Book
+from .models import Book, Category, SiteSettings
 from .cart import Cart
 
 # Create your views here.
@@ -91,11 +91,15 @@ def home(request):
     # We can later add a specific flag for "featured" books.
     featured_books = Book.objects.all().order_by('?')[:5]
     
+    # Get site settings (creates defaults if none exist)
+    site_settings = SiteSettings.get_settings()
+    
     context = {
         'featured_books': featured_books,
-        'store_name': 'المكتبة الجيرمانية',
-        'hero_title': 'اكتشف كتابك القادم المثالي',
-        'hero_subtitle': 'مجموعة منتقاة من أفضل الكتب لتعلم اللغة الألمانية وتطوير مهارات القراءة',
+        'site_settings': site_settings,
+        'store_name': site_settings.site_title,
+        'hero_title': site_settings.hero_title,
+        'hero_subtitle': site_settings.hero_subtitle,
         'store_description': 'بسبب الإقبال الكبير على تعلم اللغة الألمانية، وصعوبة إيجاد كتاب ملائم لتنمية مهارة القراءة وزيادة الحصيلة اللغوية، قررنا إنشاء هذه المكتبة لترشيح الكتب وتحديد مستواها، كما نوفر كتباً بالإنجليزية في مجالات مختلفة بأسعار جيدة.',
         'opening_hours': 'يومياً من ١٠ صباحاً إلى ١٢ مساءً - كتاب جديد كل يوم'
     }

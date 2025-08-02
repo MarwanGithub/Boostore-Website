@@ -6,7 +6,7 @@
 {% block content %}
 <style>
     .hero {
-        background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url("{% static 'images/cover.jpg' %}");
+        background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url("{% if site_settings.cover_image %}{{ site_settings.cover_image.url }}{% else %}{% static 'images/cover.jpg' %}{% endif %}");
         background-size: cover;
         background-position: center;
     }
