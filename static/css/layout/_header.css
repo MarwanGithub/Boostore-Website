@@ -20,7 +20,7 @@
 }
 
 .logo {
-    font-size: 2rem;
+    font-size: 1rem;
     font-weight: bold;
     color: white;
     text-decoration: none;
@@ -82,6 +82,11 @@
     /* Show main navigation and hide toggle on desktop */
     .nav-menu { display: flex; }
     .nav-toggle { display: none; }
+
+    /* Restore larger logo size for desktop */
+    .logo {
+        font-size: 2rem;
+    }
 
     /* Restore icon order on desktop */
     .header-icons {
