@@ -100,15 +100,6 @@
         padding: 0.25em 0.45em;
     }
 
-    /* Cart table adjustments */
-    .quantity-control {
-        width: 100% !important;
-    }
-
-    .quantity-control .form-control {
-        width: 45px;
-    }
-
     .table thead {
         font-size: 0.9rem;
     }

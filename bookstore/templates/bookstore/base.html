@@ -34,12 +34,8 @@
                 <li><a href="{% url 'bookstore:home' %}#contact"><i class="fas fa-envelope"></i> تواصل معنا</a></li>
             </ul>
 
-            <!-- Right side icons (Cart and Mobile Toggle) -->
+            <!-- Right side icons (Mobile Toggle only) -->
             <div class="header-icons">
-                <a href="{% url 'bookstore:cart_detail' %}" class="btn btn-outline-light position-relative cart-link" dir="ltr">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="header-cart-count" class="cart-count badge bg-danger position-absolute top-0 start-0 translate-middle">{{ cart|length }}</span>
-                </a>
                 <!-- MOBILE HAMBURGER BUTTON -->
                 <button id="nav-toggle" class="nav-toggle btn btn-outline-light" aria-label="Toggle navigation">
                     <i class="fas fa-bars"></i>
@@ -47,6 +43,14 @@
             </div>
         </nav>
     </header>
+
+    <!-- Floating Cart Button -->
+    <div class="floating-cart">
+        <a href="{% url 'bookstore:cart_detail' %}" class="floating-cart-btn" dir="ltr">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="floating-cart-count" class="cart-count">{{ cart|length }}</span>
+        </a>
+    </div>
 
     <main class="container py-4">
         {% block content %}

@@ -57,7 +57,10 @@ def remove_from_cart(request, book_id):
 
 def cart_detail(request):
     cart = Cart(request)
-    return render(request, 'bookstore/cart_detail.html', {'cart': cart})
+    return render(request, 'bookstore/cart_detail.html', {
+        'cart': cart,
+        'store_name': 'المكتبة الجيرمانية'
+    })
 
 def contact_to_order(request):
     cart = Cart(request)
@@ -83,6 +86,7 @@ def contact_to_order(request):
         'whatsapp_url': f"https://wa.me/{whatsapp_number}?text={prefilled_message}",
         'messenger_url': f"https://m.me/{messenger_username}?text={prefilled_message}",
         'prefilled_message': prefilled_message,
+        'store_name': 'المكتبة الجيرمانية',
     }
     return render(request, 'bookstore/contact_to_order.html', context)
 
@@ -123,5 +127,6 @@ def book_detail(request, book_id):
     context = {
         'book': book,
         'other_images': other_images,
+        'store_name': 'المكتبة الجيرمانية',
     }
     return render(request, 'bookstore/book_detail.html', context)

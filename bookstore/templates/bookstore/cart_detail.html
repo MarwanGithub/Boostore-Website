@@ -6,14 +6,14 @@ Your Shopping Cart
 {% block content %}
 <div class="container mt-5">
     <h1 dir="ltr">Your Shopping Cart</h1>
-    <div class="table-responsive">
+    
+    <!-- Desktop Table View -->
+    <div class="table-responsive d-none d-md-block">
         <table class="table table-striped" dir="ltr">
             <thead>
                 <tr>
                     <th>Book</th>
-                    <th style="width: 150px;">Quantity</th>
                     <th>Remove</th>
-                    <th>Unit Price</th>
                     <th>Price</th>
                 </tr>
             </thead>
@@ -23,29 +23,54 @@ Your Shopping Cart
                 <tr data-book-row="{{ book.id }}">
                     <td>{{ book.title }}</td>
                     <td>
-                        <div class="input-group quantity-control" data-book-id="{{ book.id }}">
-                            <button class="btn btn-outline-secondary quantity-btn" type="button" data-action="decrease">-</button>
-                            <input type="text" class="form-control text-center quantity-input" value="{{ item.quantity }}" readonly>
-                            <button class="btn btn-outline-secondary quantity-btn" type="button" data-action="increase">+</button>
-                        </div>
-                    </td>
-                    <td>
                         <button class="btn btn-link text-danger remove-btn" data-book-id="{{ book.id }}">
                             <span class="button-text">Remove</span>
                             <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                         </button>
                     </td>
-                    <td class="num item-unit-price" data-unit-price="{{ item.price|floatformat:2 }}">EGP {{ item.price|floatformat:2 }}</td>
-                    <td class="num item-total-price" data-price-id="{{ book.id }}">EGP {{ item.total_price|floatformat:2 }}</td>
+                    <td class="num item-price" data-price-id="{{ book.id }}">EGP {{ item.price|floatformat:2 }}</td>
                 </tr>
                 {% endwith %}
                 {% endfor %}
                 <tr class="table-info">
-                    <td colspan="4" class="text-end fw-bold">Total</td>
+                    <td colspan="2" class="text-end fw-bold">Total</td>
                     <td colspan="1" class="num fw-bold" id="cart-total-price">EGP {{ cart.get_total_price|floatformat:2 }}</td>
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <!-- Mobile Card View -->
+    <div class="d-md-none" dir="ltr">
+        {% for item in cart %}
+        {% with book=item.book %}
+        <div class="card mb-3" data-book-row="{{ book.id }}">
+            <div class="card-body">
+                <h6 class="card-title">{{ book.title }}</h6>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <button class="btn btn-sm btn-outline-danger remove-btn" data-book-id="{{ book.id }}">
+                        <span class="button-text">Remove</span>
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    </button>
+                    <div class="text-end">
+                        <small class="text-muted d-block">Price:</small>
+                        <strong class="item-price" data-price-id="{{ book.id }}">EGP {{ item.price|floatformat:2 }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% endfor %}
+        
+        <!-- Mobile Total -->
+        <div class="card border-primary">
+            <div class="card-body bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Total</h5>
+                    <h5 class="mb-0" id="cart-total-price-mobile">EGP {{ cart.get_total_price|floatformat:2 }}</h5>
+                </div>
+            </div>
+        </div>
     </div>
     <p class="text-end" dir="ltr">
         <a href="{% url 'bookstore:book_list' %}" class="btn btn-secondary">Continue shopping</a>
@@ -75,10 +100,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updateHeaderCart = (totalItems, cartTotalPrice) => {
         const headerCartCount = document.getElementById('header-cart-count');
+        const floatingCartCount = document.getElementById('floating-cart-count');
         const headerCartTotal = document.getElementById('header-cart-total');
 
         if (headerCartCount) {
             headerCartCount.textContent = totalItems;
+        }
+
+        if (floatingCartCount) {
+            floatingCartCount.textContent = totalItems;
         }
 
         if (headerCartTotal) {
@@ -91,38 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const updateCartItem = (bookId, quantity) => {
-        const controlDiv = document.querySelector(`.quantity-control[data-book-id="${bookId}"]`);
-        if (!controlDiv) return;
-        
-        const buttons = controlDiv.querySelectorAll('.quantity-btn');
-        buttons.forEach(b => b.disabled = true);
 
-        const formData = new FormData();
-        formData.append('quantity', quantity);
-        formData.append('override', 'True');
-
-        fetch(`/cart/add/${bookId}/`, {
-            method: 'POST',
-            headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': csrftoken },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'ok') {
-                const input = controlDiv.querySelector('.quantity-input');
-                const row = controlDiv.closest('tr');
-                
-                input.value = data.quantity;
-                row.querySelector('.item-total-price').textContent = `EGP ${data.item_total_price.toFixed(2)}`;
-                document.getElementById('cart-total-price').textContent = `EGP ${data.cart_total_price.toFixed(2)}`;
-                updateHeaderCart(data.total_items, data.cart_total_price);
-            }
-        })
-        .finally(() => {
-            buttons.forEach(b => b.disabled = false);
-        });
-    };
 
     const removeItem = (bookId) => {
         const removeButton = document.querySelector(`.remove-btn[data-book-id="${bookId}"]`);
@@ -139,29 +138,22 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             if (data.removed) {
-                const row = removeButton.closest('tr');
+                // Handle both table row and card layouts
+                const row = removeButton.closest('tr') || removeButton.closest('.card');
                 if (row) row.remove();
-                document.getElementById('cart-total-price').textContent = `EGP ${data.cart_total_price.toFixed(2)}`;
+                
+                // Update both desktop and mobile cart totals
+                const desktopTotal = document.getElementById('cart-total-price');
+                const mobileTotal = document.getElementById('cart-total-price-mobile');
+                if (desktopTotal) desktopTotal.textContent = `EGP ${data.cart_total_price.toFixed(2)}`;
+                if (mobileTotal) mobileTotal.textContent = `EGP ${data.cart_total_price.toFixed(2)}`;
+                
                 updateHeaderCart(data.total_items, data.cart_total_price);
             }
         });
     };
 
-    document.querySelectorAll('.quantity-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const group = button.closest('.quantity-control');
-            const bookId = group.dataset.bookId;
-            const input = group.querySelector('.quantity-input');
-            let currentQuantity = parseInt(input.value);
-            const newQuantity = button.dataset.action === 'increase' ? currentQuantity + 1 : currentQuantity - 1;
 
-            if (newQuantity < 1) {
-                removeItem(bookId);
-            } else {
-                updateCartItem(bookId, newQuantity);
-            }
-        });
-    });
 
     document.querySelectorAll('.remove-btn').forEach(button => {
         button.addEventListener('click', (e) => {
