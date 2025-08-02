@@ -42,6 +42,27 @@
     display: flex;
     gap: 1rem;
     margin-top: 1rem;
+    justify-content: center;
+}
+
+/* On larger screens, make social links span full footer width */
+@media (min-width: 768px) {
+    .footer-section:first-child {
+        grid-column: 1 / -1; /* Span all columns */
+        text-align: center;
+    }
+    
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for other sections */
+    }
+    
+    .footer-section:first-child + .footer-section {
+        grid-column: 1;
+    }
+    
+    .footer-section:last-child {
+        grid-column: 2;
+    }
 }
 
 .social-links a {
