@@ -13,6 +13,7 @@
 
 .cta-button:hover {
     background: #c0392b;
+    color: white;
 }
 
 .buy-button {
@@ -53,4 +54,43 @@
     background: linear-gradient(45deg, #229954, #27ae60);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+}
+
+/* Mobile-optimized button styles for phone screens */
+@media (max-width: 576px) {
+    .buy-button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+        border-radius: 20px;
+        letter-spacing: 0.5px;
+    }
+    
+    .buy-button i {
+        font-size: 0.8rem;
+        margin-right: 0.3rem;
+    }
+    
+    .cta-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Reduce hover effects on mobile for better performance */
+    .buy-button:hover {
+        transform: none;
+        box-shadow: 0 4px 15px rgba(39, 174, 96, 0.2);
+    }
+}
+
+/* Tablet adjustments */
+@media (max-width: 768px) {
+    .buy-button {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .cta-button {
+        padding: 0.9rem 1.8rem;
+    }
 }
