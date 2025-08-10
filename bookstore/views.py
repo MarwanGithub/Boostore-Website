@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 from .models import Book, Category, SiteSettings
 from .cart import Cart
 
@@ -8,6 +9,9 @@ from .cart import Cart
 
 @require_POST
 def add_to_cart(request, book_id):
+    '''
+    
+    '''
     cart = Cart(request)
     book = get_object_or_404(Book, id=book_id)
     
@@ -110,9 +114,18 @@ def home(request):
     return render(request, 'bookstore/home.html', context)
 
 def book_list(request):
-    all_books = Book.objects.all()
+    all_books = Book.objects.all().order_by('-id')
+
+    # Pagination
+    page_number = request.GET.get('page')
+    paginator = Paginator(all_books, 12)  # 12 books per page
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'books': all_books,
+        'books': page_obj,  # iterable of books on the current page
+        'page_obj': page_obj,
+        'paginator': paginator,
+        'is_paginated': page_obj.has_other_pages(),
         'store_name': 'المكتبة الجيرمانية',
         'opening_hours': 'يومياً من ١٠ صباحاً إلى ١٢ مساءً - كتاب جديد كل يوم'
     }

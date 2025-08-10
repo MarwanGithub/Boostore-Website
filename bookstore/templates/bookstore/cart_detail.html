@@ -73,7 +73,7 @@ Your Shopping Cart
         </div>
     </div>
     <p class="text-end" dir="ltr">
-        <a href="{% url 'bookstore:book_list' %}" class="btn btn-secondary">Continue shopping</a>
+        <a href="{% url 'bookstore:book_list' %}?page=1" class="btn btn-secondary">Continue shopping</a>
         <a href="{% url 'bookstore:contact_to_order' %}" class="btn btn-primary">Proceed to Order</a>
     </p>
 </div>

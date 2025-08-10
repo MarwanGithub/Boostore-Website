@@ -21,7 +21,7 @@
                     <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-shopping-cart"></i> <span>أضف للسلة</span></button>
                 </form>
             {% endif %}
-             <a href="{% url 'bookstore:book_list' %}" class="btn btn-outline-secondary btn-lg">الرجوع إلى قائمة الكتب</a>
+             <a href="{% url 'bookstore:book_list' %}?page=1" class="btn btn-outline-secondary btn-lg">الرجوع إلى قائمة الكتب</a>
         </div>
         <div class="col-md-4">
             {% if book.cover_image %}
