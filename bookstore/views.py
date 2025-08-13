@@ -156,8 +156,23 @@ def db_keepalive(request):
 
     try:
         with connection.cursor() as cursor:
-            cursor.execute('SELECT 1;')
-            cursor.fetchone()
-        return JsonResponse({'ok': True})
+            cursor.execute(
+                """
+                create table if not exists public.heartbeat (
+                    id int primary key default 1,
+                    last_seen timestamptz not null default now()
+                );
+                """
+            )
+            cursor.execute(
+                """
+                insert into public.heartbeat (id, last_seen)
+                values (1, now())
+                on conflict (id) do update set last_seen = excluded.last_seen
+                returning last_seen;
+                """
+            )
+            row = cursor.fetchone()
+        return JsonResponse({'ok': True, 'last_seen': row[0].isoformat() if row else None})
     except Exception:
         return JsonResponse({'ok': False}, status=502)
