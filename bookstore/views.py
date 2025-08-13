@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from .models import Book, Category, SiteSettings
 from .cart import Cart
+from django.db import connection
+import os
 
 # Create your views here.
 
@@ -143,3 +145,19 @@ def book_detail(request, book_id):
         'store_name': 'المكتبة الجيرمانية',
     }
     return render(request, 'bookstore/book_detail.html', context)
+
+def db_keepalive(request):
+    """
+    Lightweight endpoint to keep the Supabase database active using the
+    existing Django database connection (which points to Supabase).
+
+    No external keys are required; we simply execute a trivial query.
+    """
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT 1;')
+            cursor.fetchone()
+        return JsonResponse({'ok': True})
+    except Exception:
+        return JsonResponse({'ok': False}, status=502)

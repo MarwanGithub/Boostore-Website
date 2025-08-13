@@ -5,7 +5,7 @@
 **Core Technologies:**
 *   **Backend:** Django
 *   **Frontend:** HTML, Bootstrap, and vanilla JavaScript (for AJAX interactions).
-*   **Database:** PostgreSQL on Render, SQLite for local development.
+*   **Database:** PostgreSQL on Supabase free use, SQLite for local development.
 *   **Static & Media Files:** `django-cloudinary-storage` is used to handle all static and media files in the production environment on Render.
 *   **Admin Theme:** `django-jazzmin` is used for an enhanced admin interface.
 
